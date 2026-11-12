@@ -4,6 +4,11 @@ import { Header } from "@/components/layout/Header";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // Base for resolving relative URLs in metadata (e.g. Open Graph images).
+  // Set NEXT_PUBLIC_SITE_URL to the real domain when deploying.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
   title: {
     default: "ExhibitionData | Global Trade Shows & Exhibitions",
     template: "%s | ExhibitionData",

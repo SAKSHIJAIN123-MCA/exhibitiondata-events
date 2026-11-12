@@ -35,3 +35,24 @@ function parseISO(iso: string) {
     month: MONTH_NAMES[month - 1].slice(0, 3),
   };
 }
+
+const WEEKDAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+] as const;
+
+/**
+ * Formats a single ISO date in full, e.g. "Wednesday, 6 January 2027".
+ * The weekday is calculated in UTC from the date parts, so it can't shift
+ * with the time zone (same reasoning as `formatDateRange`).
+ */
+export function formatLongDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  const weekday = WEEKDAY_NAMES[new Date(Date.UTC(year, month - 1, day)).getUTCDay()];
+  return `${weekday}, ${day} ${MONTH_NAMES[month - 1]} ${year}`;
+}
