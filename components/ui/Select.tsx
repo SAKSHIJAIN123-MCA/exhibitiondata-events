@@ -1,6 +1,13 @@
 import type { SelectHTMLAttributes } from "react";
-import { cn } from "@/lib/cn";
+import {
+  FieldError,
+  FieldLabel,
+  controlStyles,
+  describedBy,
+  errorIdFor,
+} from "@/components/ui/FormField";
 import { ChevronDownIcon } from "@/components/ui/icons";
+import { cn } from "@/lib/cn";
 
 export interface SelectOption {
   value: string;
@@ -16,6 +23,8 @@ interface SelectProps
   /** Label of the empty option, e.g. "All industries". Its value is "". */
   placeholder: string;
   onChange: (value: string) => void;
+  /** Validation message. When set, the field is marked invalid and the message is shown below it. */
+  error?: string;
 }
 
 /** Labelled native <select> (best accessibility and mobile behaviour). */
@@ -26,22 +35,24 @@ export function Select({
   options,
   placeholder,
   onChange,
+  error,
   className,
+  "aria-describedby": ariaDescribedBy,
   ...props
 }: SelectProps) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-slate-700">
-        {label}
-      </label>
+      <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <div className="relative">
         <select
           id={id}
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy(ariaDescribedBy, error && errorIdFor(id))}
           className={cn(
-            "h-11 w-full appearance-none rounded-lg border-0 bg-white pl-3 pr-10 text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300",
-            "focus:outline-2 focus:outline-offset-0 focus:outline-indigo-600",
+            controlStyles(Boolean(error)),
+            "h-11 appearance-none pl-3 pr-10",
             className,
           )}
           {...props}
@@ -55,6 +66,7 @@ export function Select({
         </select>
         <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-slate-400" />
       </div>
+      <FieldError controlId={id} message={error} />
     </div>
   );
 }

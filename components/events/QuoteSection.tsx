@@ -3,23 +3,24 @@ import { QUOTE_SECTION_ID } from "@/lib/constants";
 
 interface QuoteSectionProps {
   eventName: string;
-  /** The quote form. A placeholder is shown until the form is built. */
-  children?: ReactNode;
+  /** The quote form. */
+  children: ReactNode;
 }
 
 /**
- * Anchor target for every "Get a Quote" button (`id="quote"`).
+ * Anchor target for every "Get a Quote" button (`id="quote"`) and the card
+ * that frames the form.
  *
  * `scroll-mt-24` keeps the section heading from hiding under the sticky
- * header when the page scrolls here. The form itself will be passed in as
- * `children` in the quote-form phase, so this wrapper won't need to change.
+ * header when the page scrolls here. The form is passed in as `children`, so
+ * this wrapper stays a Server Component and ships no JavaScript of its own.
  */
 export function QuoteSection({ eventName, children }: QuoteSectionProps) {
   return (
     <section
       id={QUOTE_SECTION_ID}
       aria-labelledby="quote-heading"
-      className="scroll-mt-24 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8"
+      className="scroll-mt-24 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 sm:p-8"
     >
       <h2
         id="quote-heading"
@@ -28,17 +29,11 @@ export function QuoteSection({ eventName, children }: QuoteSectionProps) {
         Get a Quote
       </h2>
       <p className="mt-2 max-w-2xl text-slate-600">
-        Interested in exhibiting at or attending {eventName}? Tell us about your
-        requirements and we&apos;ll get back to you with a tailored quote.
+        Request a quote for the exhibitor and attendee data from {eventName}.
+        Tell us what you need and our team will get back to you.
       </p>
 
-      <div className="mt-6">
-        {children ?? (
-          <p className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500">
-            The quote request form will appear here.
-          </p>
-        )}
-      </div>
+      <div className="mt-6 max-w-3xl">{children}</div>
     </section>
   );
 }
