@@ -238,11 +238,11 @@ export default function GetAQuotePage() {
       {/* Intro */}
       <section className="bg-white">
         <Container className="grid gap-8 py-14 sm:py-20 lg:grid-cols-[1fr_1.5fr] lg:gap-14">
-          <h2
-            className={`text-balance text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl ${NAVY}`}
-          >
-            How We Price Exhibitor and Attendee Lists
-          </h2>
+        <h2
+  className={`text-balance text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.25rem] ${NAVY}`}
+>
+  How We Price Exhibitor and Attendee Lists
+</h2>
           <div className="max-w-2xl space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
             <p>
               Every list we build is priced for your request. Tell us the event,
