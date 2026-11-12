@@ -118,7 +118,7 @@ const nextConfig: NextConfig = {
 };
 ```
 
-If you change the image URLs in `src/data/events.json`, update this list to match.
+If you change the image URLs in `data/events.json`, update this list to match.
 
 **Environment variables (optional).** `NEXT_PUBLIC_SITE_URL` sets the base URL used to resolve absolute URLs in metadata (Open Graph). It defaults to `http://localhost:3000`. Set it to your real domain when deploying. Nothing else is required.
 
@@ -140,68 +140,92 @@ Then open <http://localhost:3000/events>. Some URLs worth trying:
 
 ## 6. Folder structure
 
-The code lives in `src/` and uses the `@/*` import alias (for example `@/lib/events`).
+The project uses the Next.js App Router directly from the root directory. There is no `src/` directory. All application routes, components, libraries, types and mock data are organized at the project root.
 
-```
-src/
-├── app/                              # Routes (App Router)
-│   ├── layout.tsx                    # Root layout: header, footer, skip link, site metadata
-│   ├── globals.css                   # Tailwind import + small global rules
-│   ├── page.tsx                      # Home
-│   ├── about/page.tsx                # About (placeholder copy)
-│   ├── contact/page.tsx              # Contact (placeholder copy)
-│   ├── not-found.tsx                 # Global 404
+```text
+project-root/
+├── app/                              # Next.js App Router
+│   ├── layout.tsx                    # Root layout: header, footer, metadata
+│   ├── globals.css                   # Tailwind import + global styles
+│   ├── page.tsx                      # Home page
+│   ├── about/
+│   │   └── page.tsx                  # About page
+│   ├── contact/
+│   │   └── page.tsx                  # Contact page
+│   ├── not-found.tsx                 # Global 404 page
 │   └── events/
-│       ├── page.tsx                  # Listing: reads searchParams, renders hero + explorer
-│       ├── not-found.tsx             # Event 404 (shown when notFound() is called)
-│       └── [slug]/page.tsx           # Detail: generateStaticParams, generateMetadata, page
+│       ├── page.tsx                  # Events listing page
+│       ├── not-found.tsx             # Event-specific 404 page
+│       └── [slug]/
+│           └── page.tsx              # Event detail page
 │
 ├── components/
-│   ├── ui/                           # Generic primitives with no knowledge of events
-│   │   ├── Button.tsx                # Button + buttonStyles() so links can look like buttons
+│   ├── ui/                           # Reusable UI primitives
+│   │   ├── Button.tsx
 │   │   ├── Badge.tsx
 │   │   ├── Container.tsx
-│   │   ├── Input.tsx  Select.tsx  Textarea.tsx   # Labelled controls with error support
-│   │   ├── FormField.tsx             # Shared label, error message and control styles
+│   │   ├── Input.tsx
+│   │   ├── Select.tsx
+│   │   ├── Textarea.tsx
+│   │   ├── FormField.tsx
 │   │   ├── Breadcrumbs.tsx
 │   │   ├── EmptyState.tsx
-│   │   └── icons.tsx                 # Inline SVG icons
-│   ├── layout/                       # Site chrome
-│   │   ├── Header.tsx  NavLinks.tsx  Footer.tsx
-│   │   ├── NotFoundView.tsx          # Shared 404 layout
-│   │   └── PageIntro.tsx             # Title + text for About / Contact
-│   └── events/                       # Feature components
-│       ├── EventsHero.tsx            # Listing hero
-│       ├── EventsExplorer.tsx        # Client: filter state, filtering, URL sync
-│       ├── EventFilters.tsx          # Search + dropdowns + clear button (controlled)
-│       ├── EventsExplorerSkeleton.tsx# Loading placeholder
-│       ├── EventGrid.tsx  EventCard.tsx  IndustryBadge.tsx
-│       ├── EventHeader.tsx  EventHeroImage.tsx  EventDetails.tsx   # Detail page sections
-│       ├── GetQuoteButton.tsx        # "Get a Quote" anchor button
-│       ├── QuoteSection.tsx          # Anchor target (#quote) that frames the form
-│       ├── QuoteForm.tsx             # Client: quote form, validation, success state
+│   │   └── icons.tsx
+│   │
+│   ├── layout/                       # Shared site layout
+│   │   ├── Header.tsx
+│   │   ├── NavLinks.tsx
+│   │   ├── Footer.tsx
+│   │   ├── NotFoundView.tsx
+│   │   └── PageIntro.tsx
+│   │
+│   └── events/                       # Event-specific components
+│       ├── EventsHero.tsx
+│       ├── EventsExplorer.tsx
+│       ├── EventFilters.tsx
+│       ├── EventsExplorerSkeleton.tsx
+│       ├── EventGrid.tsx
+│       ├── EventCard.tsx
+│       ├── IndustryBadge.tsx
+│       ├── EventHeader.tsx
+│       ├── EventHeroImage.tsx
+│       ├── EventDetails.tsx
+│       ├── GetQuoteButton.tsx
+│       ├── QuoteSection.tsx
+│       ├── QuoteForm.tsx
 │       └── RelatedEvents.tsx
 │
-├── lib/                              # Logic with no JSX
-│   ├── events.ts                     # Data access: the only file that reads events.json
-│   ├── filters.ts                    # Parse/serialize URL params and filter events (pure)
-│   ├── validation.ts                 # Quote form validation (pure)
-│   ├── quote.ts                      # MOCK quote submission
-│   ├── format.ts                     # Date formatting (timezone-safe)
-│   ├── constants.ts                  # Month names, nav links, quote anchor id
-│   └── cn.ts                         # className joiner
+├── lib/                              # Application logic and utilities
+│   ├── events.ts                     # Event data access
+│   ├── filters.ts                    # Search and filter logic
+│   ├── validation.ts                 # Quote form validation
+│   ├── quote.ts                      # Mock quote submission
+│   ├── format.ts                     # Date formatting
+│   ├── constants.ts                  # Shared constants
+│   └── cn.ts                         # Class name utility
 │
 ├── types/
-│   ├── event.ts                      # TradeEvent, EventSummary, EventFilters, Industry
+│   ├── event.ts                      # Event-related TypeScript types
 │   └── quote.ts                      # Quote form types
 │
-└── data/
-    └── events.json                   # Mock data source (12 events)
+├── data/
+│   └── events.json                   # Mock event dataset (12 events)
+│
+├── public/                           # Static assets
+├── next.config.ts                    # Next.js configuration
+├── tsconfig.json                     # TypeScript configuration
+├── package.json
+├── eslint.config.mjs
+└── README.md
 ```
+
+All imports use the root-based `@/*` alias (for example, `@/lib/events` and `@/components/events/EventCard`).
+
+
 
 ## 7. Data source: why mock JSON
 
-I used a local JSON file (`src/data/events.json`) instead of the WordPress REST API or WPGraphQL. My reasons:
+I used a local JSON file (`data/events.json`) instead of the WordPress REST API or WPGraphQL. My reasons:
 
 1. **The assignment is about frontend skills.** Standing up a WordPress instance with a custom post type, custom fields and a GraphQL plugin would have used much of the available time on setup instead of on the UI, routing, filtering and form work being evaluated.
 2. **Zero setup for the reviewer.** `npm install && npm run dev` is enough. There is no WordPress site to host, no plugins, credentials, CORS rules or environment variables.
@@ -214,11 +238,11 @@ I used a local JSON file (`src/data/events.json`) instead of the WordPress REST 
 - The whole dataset is loaded for the listing and filtered in the browser. That is fine for 12 events but would not scale to thousands (see [section 17](#17-what-i-would-improve-with-more-time)).
 - `events.json` is cast to the `TradeEvent` type. It is not validated at runtime, so a malformed entry would not be caught until it caused an error.
 
-**Moving to WordPress later.** I designed the data layer so this would be a contained change. `src/lib/events.ts` is the only file that imports the JSON, and every function in it is already `async`, as a network call would be. Switching would mean replacing its internals with a fetch to the REST API (or a WPGraphQL query), mapping the response into the existing `TradeEvent` shape in one function, and adding caching or revalidation. Components, routes and filtering would not need to change. I have not built either integration. This describes the intended approach, not existing code.
+**Moving to WordPress later.** I designed the data layer so this would be a contained change. `lib/events.ts` is the only file that imports the JSON, and every function in it is already `async`, as a network call would be. Switching would mean replacing its internals with a fetch to the REST API (or a WPGraphQL query), mapping the response into the existing `TradeEvent` shape in one function, and adding caching or revalidation. Components, routes and filtering would not need to change. I have not built either integration. This describes the intended approach, not existing code.
 
 **About the data itself.** Event names, cities and venues are based on real trade shows, but they were not verified against the organisers' current information, and the 2027 dates in particular are illustrative. The descriptions were written for this assignment. Images are random placeholders from `picsum.photos`, so each `altText` describes the subject the image is meant to show, not what the placeholder currently displays.
 
-Event shape (`src/types/event.ts`):
+Event shape (`types/event.ts`):
 
 ```ts
 export interface TradeEvent {
@@ -274,7 +298,7 @@ The `ui` primitives have no `"use client"` directive. They run on the server or 
 
 ## 9. How event data is retrieved
 
-All access goes through `src/lib/events.ts`. Pages and components never import the JSON directly.
+All access goes through `lib/events.ts`. Pages and components never import the JSON directly.
 
 | Function | Returns | Used by |
 | --- | --- | --- |
@@ -312,7 +336,7 @@ At `next build`, Next.js calls this function, gets one `{ slug }` per event and 
 
 ## 11. How search and industry/month filters work
 
-The logic lives in `src/lib/filters.ts` as the pure function `filterEvents(events, filters)`.
+The logic lives in `lib/filters.ts` as the pure function `filterEvents(events, filters)`.
 
 | Filter | Behaviour |
 | --- | --- |
@@ -342,7 +366,7 @@ The URL is the shareable record of the filter state:
 
 ## 13. How the quote form validation works
 
-`QuoteForm` (client component) keeps all state in React (`useState`). The rules are pure functions in `src/lib/validation.ts`.
+`QuoteForm` (client component) keeps all state in React (`useState`). The rules are pure functions in `lib/validation.ts`.
 
 **Rules**
 
@@ -366,7 +390,7 @@ The URL is the shareable record of the filter state:
 
 1. `onSubmit` calls `preventDefault()` first, so the page never reloads. Pressing Enter in a field submits the form.
 2. `parseQuoteForm()` validates and trims the values. If it fails, the errors are shown and nothing is sent.
-3. The form calls `submitQuoteRequest()` in `src/lib/quote.ts`. **This is a mock:** it waits about 900 ms to simulate a network request and returns a reference number such as `QR-K3J9XA`. **No data leaves the browser.** While it waits, the button reads "Sending…" and the fields are locked, so a double-click sends only one request.
+3. The form calls `submitQuoteRequest()` in `lib/quote.ts`. **This is a mock:** it waits about 900 ms to simulate a network request and returns a reference number such as `QR-K3J9XA`. **No data leaves the browser.** While it waits, the button reads "Sending…" and the fields are locked, so a double-click sends only one request.
 4. On success, the form is cleared and a success message shows the event name, what was requested, the email the reply would go to, and the reference number. "Submit another request" shows a blank form again.
 5. If the call throws, an error message is shown and what the visitor typed is kept so they can retry.
 
