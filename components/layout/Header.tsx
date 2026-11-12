@@ -71,8 +71,8 @@ export function Header() {
       </div>
 
       {/* lg:pt-9 = strip ki height (h-9) ke barabar space nav ke upar */}
-      <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-2 lg:pb-1 lg:pt-9">
-        {/* lg:-mt-9 logo ko upar kheench kar strip ke top se align karta hai */}
+
+      <Container className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2 lg:pb-1 lg:pt-9">
         <Link
           href="/"
           className="shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lg:-mt-9"
@@ -83,21 +83,21 @@ export function Header() {
             width={180}
             height={45}
             priority
-            className="h-14 w-auto object-contain sm:h-16 lg:h-[5rem]"
+            className="h-12 w-auto object-contain sm:h-16 lg:h-[5rem]"
           />
         </Link>
 
-        <div className="flex items-center gap-4 lg:gap-6 mt-4 mb-2">
-          <div className="[&_a]:text-base [&_a]:font-bold lg:[&_a]:text-[18px] [&_a]:text-[#0f1a5c]">
+        <div className="flex max-w-full flex-wrap items-center justify-end gap-x-2 gap-y-2 mt-2 mb-1 sm:gap-x-4 lg:mt-4 lg:mb-2 lg:gap-x-6">
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 mt-2 mb-1 lg:mt-4 lg:mb-2">
             <NavLinks />
-          </div>
 
-          <Link
-            href="/get-a-quote"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#0f1a5c] to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_6px_18px_rgba(37,99,235,0.35)] transition hover:-translate-y-0.5 hover:from-[#16247a] hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none sm:px-7"
-          >
-            Get a Quote
-          </Link>
+            <Link
+              href="/get-a-quote"
+              className="inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#0f1a5c] to-blue-600 px-3 py-2 text-xs font-bold text-white shadow-md transition hover:from-[#16247a] hover:to-blue-500 sm:px-7 sm:py-2.5 sm:text-sm"
+            >
+              Get a Quote
+            </Link>
+          </div>
         </div>
       </Container>
     </header>
