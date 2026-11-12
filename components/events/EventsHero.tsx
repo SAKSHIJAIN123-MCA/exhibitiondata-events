@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 
 interface EventsHeroProps {
@@ -19,6 +20,21 @@ export function EventsHero({
 
   return (
     <section className="relative isolate overflow-hidden bg-slate-950 text-white">
+      {/* Background image */}
+      <Image
+        src="/contact.avif"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-30 object-cover"
+      />
+      {/* Dark overlay keeps the text readable over the image. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-20 bg-slate-950/75"
+      />
+
       {/* Decorative glow */}
       <div
         aria-hidden="true"

@@ -15,7 +15,7 @@ export function GetQuoteButton({ className }: { className?: string }) {
       href={`#${QUOTE_SECTION_ID}`}
       className={cn(buttonStyles({ size: "lg" }), className)}
     >
-      Get a Quote
+      GET A QUOTE
       <ArrowRightIcon className="size-5" />
     </a>
   );

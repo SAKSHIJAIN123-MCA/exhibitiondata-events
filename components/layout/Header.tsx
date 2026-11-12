@@ -1,31 +1,105 @@
 import Link from "next/link";
+import Image from "next/image";
 import { NavLinks } from "@/components/layout/NavLinks";
 import { Container } from "@/components/ui/Container";
-import Image from "next/image";
 
+const PHONE = "+91 7067416887";
+const EMAIL = "info@exhibitiondata.com";
+
+function PhoneIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+    </svg>
+  );
+}
+
+function MailIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </svg>
+  );
+}
+
+const topLink =
+  "flex items-center text-sm font-medium text-white transition-colors hover:text-blue-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 export function Header() {
   return (
-    // Sticky from the `sm` breakpoint up; on phones it scrolls away, because
-    // the two-row header would otherwise take too much of a small screen.
-    <header className="z-40 border-b border-slate-200 bg-white/90 backdrop-blur sm:sticky sm:top-0">
-  <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2 sm:py-3">
-    <Link
-      href="/"
-      className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-    >
-      <Image
-        src="/logo.svg"
-        alt="ExhibitionData"
-        width={190}
-        height={55}
-        priority
-        className="h-20 w-auto object-contain"
-      />
-    </Link>
+    // Sticky from `sm` up; on phones it scrolls away.
+    // `relative` needed so the strip can be absolutely positioned on lg+.
+    <header className="relative z-40 bg-white shadow-sm sm:sticky sm:top-0">
+      {/* Contact strip: in-flow on sm–lg, pinned top-right on lg+ */}
+      <div className="hidden bg-white sm:block lg:absolute lg:right-0 lg:top-0 lg:bg-transparent">
+        <div className="flex justify-end">
+          <div className="flex items-stretch bg-blue-600 pl-10 [clip-path:polygon(28px_0,100%_0,100%_100%,0_100%)]">
+            <a href={`tel:${PHONE.replace(/\s/g, "")}`} className={topLink}>
+              <span className="flex h-9 w-10 items-center justify-center bg-[#0f1a5c]">
+                <PhoneIcon className="size-4" />
+              </span>
+              <span className="px-4">{PHONE}</span>
+            </a>
 
-    <NavLinks />
-  </Container>
-</header>
+            <a href={`mailto:${EMAIL}`} className={topLink}>
+              <span className="flex h-9 w-10 items-center justify-center bg-[#0f1a5c]">
+                <MailIcon className="size-4" />
+              </span>
+              <span className="px-4">{EMAIL}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* lg:pt-9 = strip ki height (h-9) ke barabar space nav ke upar */}
+      <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-2 lg:pb-1 lg:pt-9">
+        {/* lg:-mt-9 logo ko upar kheench kar strip ke top se align karta hai */}
+        <Link
+          href="/"
+          className="shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lg:-mt-9"
+        >
+          <Image
+            src="/logo.svg"
+            alt="ExhibitionData"
+            width={180}
+            height={45}
+            priority
+            className="h-14 w-auto object-contain sm:h-16 lg:h-[5rem]"
+          />
+        </Link>
+
+        <div className="flex items-center gap-4 lg:gap-6 mt-4 mb-2">
+          <div className="[&_a]:text-base [&_a]:font-bold lg:[&_a]:text-[18px] [&_a]:text-[#0f1a5c]">
+            <NavLinks />
+          </div>
+
+          <Link
+            href="/get-a-quote"
+            className="inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#0f1a5c] to-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_6px_18px_rgba(37,99,235,0.35)] transition hover:-translate-y-0.5 hover:from-[#16247a] hover:to-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none sm:px-7"
+          >
+            Get a Quote
+          </Link>
+        </div>
+      </Container>
+    </header>
   );
 }

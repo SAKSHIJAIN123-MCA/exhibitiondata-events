@@ -26,10 +26,10 @@ export function QuoteSection({ eventName, children }: QuoteSectionProps) {
         id="quote-heading"
         className="text-2xl font-bold tracking-tight text-slate-900"
       >
-        Get a Quote
+         GET A QUOTE
       </h2>
       <p className="mt-2 max-w-2xl text-slate-600">
-        Request a quote for the exhibitor and attendee data from {eventName}.
+        Get a quote for the exhibitor and attendee data from {eventName}.
         Tell us what you need and our team will get back to you.
       </p>
 
