@@ -3,16 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { A11y, Autoplay, Keyboard } from "swiper/modules";
-import dynamic from "next/dynamic";
-
-const Swiper = dynamic(() => import("swiper/react").then((mod) => mod.Swiper), {
-  ssr: false,
-});
-
-const SwiperSlide = dynamic(
-  () => import("swiper/react").then((mod) => mod.SwiperSlide),
-  { ssr: false },
-);
+import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Container } from "@/components/ui/Container";
 import { Reveal, SectionTitle } from "@/components/home/reveal";
@@ -90,15 +81,39 @@ function UserIcon() {
   );
 }
 
+function ArrowIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className ?? "size-5"}
+    >
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+const arrowBtn =
+  "flex size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0f1a5c] shadow-sm transition hover:border-blue-600 hover:bg-blue-600 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 motion-reduce:transition-none";
+
 export function Testimonials() {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [active, setActive] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
+  // Swiper's Autoplay/A11y modules call `new Date()` when the slider is
+  // created. Rendering it only after mount keeps that out of the prerender.
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     );
+    setMounted(true);
   }, []);
 
   return (
@@ -124,87 +139,112 @@ export function Testimonials() {
             aria-hidden="true"
           />
 
-          <Swiper
-            modules={[Autoplay, A11y, Keyboard]}
-            onSwiper={setSwiper}
-            onSlideChange={(s) => setActive(s.realIndex)}
-            loop
-            centeredSlides
-            slidesPerView="auto"
-            spaceBetween={24}
-            speed={800}
-            grabCursor
-            keyboard={{ enabled: true }}
-            autoplay={
-              reducedMotion
-                ? false
-                : {
-                    delay: 2000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                  }
-            }
-            a11y={{ containerMessage: "Customer testimonials" }}
-            className="!pb-14 !pt-16"
-          >
-            {TESTIMONIALS.map((t) => (
-              <SwiperSlide
-                key={t.name}
-                className="group !h-auto !w-[86vw] sm:!w-[34rem] lg:!w-[38rem]"
-              >
-                <figure className="relative flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-7 pt-10 opacity-50 shadow-sm transition-all duration-700 ease-out group-[.swiper-slide-active]:scale-100 group-[.swiper-slide-active]:border-indigo-300 group-[.swiper-slide-active]:opacity-100 group-[.swiper-slide-active]:shadow-[0_20px_60px_rgba(15,26,92,0.18)] scale-90 motion-reduce:transition-none">
-                  <span className="absolute -top-6 left-7 text-slate-400 transition-colors duration-500 group-[.swiper-slide-active]:text-blue-600">
-                    <QuoteIcon />
-                  </span>
-
-                  <blockquote className="text-base italic leading-relaxed text-[#0f1a5c]/75">
-                    {t.quote}
-                  </blockquote>
-
-                  <figcaption className="mt-auto flex items-center gap-4 pt-6">
-                    <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[#0f1a5c]">
-                      <UserIcon />
+          {mounted ? (
+            <Swiper
+              modules={[Autoplay, A11y, Keyboard]}
+              onSwiper={setSwiper}
+              onSlideChange={(s) => setActive(s.realIndex)}
+              loop
+              centeredSlides
+              slidesPerView="auto"
+              spaceBetween={24}
+              speed={800}
+              grabCursor
+              keyboard={{ enabled: true }}
+              autoplay={
+                reducedMotion
+                  ? false
+                  : {
+                      delay: 4000,
+                      disableOnInteraction: false,
+                      pauseOnMouseEnter: true,
+                    }
+              }
+              a11y={{ containerMessage: "Customer testimonials" }}
+              className="!pb-14 !pt-16"
+            >
+              {TESTIMONIALS.map((t) => (
+                <SwiperSlide
+                  key={t.name}
+                  className="group !h-auto !w-[86vw] sm:!w-[34rem] lg:!w-[38rem]"
+                >
+                  <figure className="relative flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-7 pt-10 opacity-50 shadow-sm transition-all duration-700 ease-out group-[.swiper-slide-active]:scale-100 group-[.swiper-slide-active]:border-indigo-300 group-[.swiper-slide-active]:opacity-100 group-[.swiper-slide-active]:shadow-[0_20px_60px_rgba(15,26,92,0.18)] scale-90 motion-reduce:transition-none">
+                    <span className="absolute -top-6 left-7 text-slate-400 transition-colors duration-500 group-[.swiper-slide-active]:text-blue-600">
+                      <QuoteIcon />
                     </span>
-                    <span>
-                      <span className="block text-sm font-extrabold uppercase text-[#0f1a5c]">
-                        {t.name}
+
+                    <blockquote className="text-base italic leading-relaxed text-[#0f1a5c]/75">
+                      {t.quote}
+                    </blockquote>
+
+                    <figcaption className="mt-auto flex items-center gap-4 pt-6">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[#0f1a5c]">
+                        <UserIcon />
                       </span>
-                      <span className="block text-sm leading-snug text-[#0f1a5c]/70">
-                        {t.role}
+                      <span>
+                        <span className="block text-sm font-extrabold uppercase text-[#0f1a5c]">
+                          {t.name}
+                        </span>
+                        <span className="block text-sm leading-snug text-[#0f1a5c]/70">
+                          {t.role}
+                        </span>
                       </span>
-                    </span>
-                  </figcaption>
-                </figure>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                    </figcaption>
+                  </figure>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            // Same height as the slider, so the page doesn't jump on mount
+            <div className="h-[26rem]" aria-hidden="true" />
+          )}
         </div>
       </Reveal>
 
-      {/* Dots */}
-      <div
-        className="flex items-center justify-center gap-1 pb-14 sm:pb-20"
-        role="group"
-        aria-label="Choose a testimonial"
-      >
-        {TESTIMONIALS.map((t, i) => (
-          <button
-            key={t.name}
-            type="button"
-            onClick={() => swiper?.slideToLoop(i)}
-            aria-label={`Show testimonial from ${t.name}`}
-            aria-current={i === active}
-            className="group rounded-full p-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            <span
-              className={`block h-2 rounded-full transition-all duration-500 motion-reduce:transition-none ${
-                i === active
-                  ? "w-7 bg-blue-600"
-                  : "w-2 bg-slate-300 group-hover:bg-slate-400"
-              }`}
-            />
-          </button>
-        ))}
+      {/* Controls: prev / dots / next */}
+      <div className="flex items-center justify-center gap-3 pb-14 sm:pb-20">
+        <button
+          type="button"
+          onClick={() => swiper?.slidePrev()}
+          aria-label="Previous testimonial"
+          className={arrowBtn}
+        >
+          <ArrowIcon className="size-5 rotate-180" />
+        </button>
+
+        <div
+          className="flex items-center gap-1"
+          role="group"
+          aria-label="Choose a testimonial"
+        >
+          {TESTIMONIALS.map((t, i) => (
+            <button
+              key={t.name}
+              type="button"
+              onClick={() => swiper?.slideToLoop(i)}
+              aria-label={`Show testimonial from ${t.name}`}
+              aria-current={i === active}
+              className="group rounded-full p-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              <span
+                className={`block h-2 rounded-full transition-all duration-500 motion-reduce:transition-none ${
+                  i === active
+                    ? "w-7 bg-blue-600"
+                    : "w-2 bg-slate-300 group-hover:bg-slate-400"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => swiper?.slideNext()}
+          aria-label="Next testimonial"
+          className={arrowBtn}
+        >
+          <ArrowIcon />
+        </button>
       </div>
     </section>
   );
